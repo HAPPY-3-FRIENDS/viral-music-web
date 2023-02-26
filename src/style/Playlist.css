@@ -22,6 +22,7 @@
 .playlist-header-text-top {
   font-size: 64px;
   margin-right: 16px;
+  color: #fff;
 }
 
 .playlist-header-text-playlist {
@@ -37,7 +38,18 @@
 
 .playlist-pic-container {
   margin-top: 2%;
+  display: flex;
+  width: 1628px;
+}
+
+.scroll-container {
+  overflow: hidden;
+  width: 1628px;
+}
+
+.playlist-pic-relative {
   position: relative;
+  margin-right: 24px;
 }
 
 .playlist-pic {
@@ -64,7 +76,6 @@
   line-height: 0;
   position: absolute;
   top: 0;
-  z-index: 999;
 }
 
 .playlist-pic-hover {
@@ -75,10 +86,10 @@
 }
 
 .playlist-pic-hover:hover {
-    width: 72px;
-    height: 72px;
-    margin-top: 8%;
-    cursor: pointer;
+  width: 72px;
+  height: 72px;
+  margin-top: 8%;
+  cursor: pointer;
 }
 
 .playlist-text-hover {
@@ -90,4 +101,66 @@
   font-size: 26px;
   font-weight: 700;
   margin-bottom: 32px;
+}
+
+.playlist-user-container {
+  display: flex;
+  width: 480px;
+  height: 145px;
+  background: rgba(51, 55, 59, 0.37);
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 24px;
+  margin-right: 24px;
+}
+
+.playlist-user-img {
+  width: 112px;
+  height: 112px;
+  border-radius: 16px;
+  margin-right: 16px;
+}
+
+.playlist-user-text-container {
+  color: #FFF;
+}
+
+.playlist-user-title {
+  margin: 0;
+  font-size: 26px;
+  width: 240px;
+  margin-right: 24px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.playlist-user-date {
+  line-height: 0;
+  font-style: italic;
+}
+
+.playlist-user-container-box {
+  display: flex;
+}
+
+.playlist-scroll-container {
+  display: flex;
+  align-items: center;
+}
+
+.playlist-button-next {
+  width: 80px;
+  height: 80px;
+  font-size: 40px;
+  margin-left: -24px;
+  color: rgba(51, 55, 59, 0.64);
+  transition: all 0.15s linear 0.15s;
+}
+
+.playlist-button-next:hover {
+  cursor: pointer;
+  color: #FFF;
 }

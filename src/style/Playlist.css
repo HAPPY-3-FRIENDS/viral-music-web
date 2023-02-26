@@ -1,0 +1,93 @@
+.playlist-container {
+  background: linear-gradient(
+      180deg,
+      #1d2123a4 20%,
+      rgba(29, 33, 35, 0.315) 80%
+    ),
+    url(../../src/asset/Login_Background.jpg);
+  max-width: 100%;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.playlist-header-text-container {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  line-height: 0;
+  margin-top: 2%;
+  align-items: center;
+}
+.playlist-header-text-top {
+  font-size: 64px;
+  margin-right: 16px;
+}
+
+.playlist-header-text-playlist {
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: 0.24em;
+}
+
+.playlist-header-text-collection {
+  font-size: 26px;
+  letter-spacing: 0.24em;
+}
+
+.playlist-pic-container {
+  margin-top: 2%;
+  position: relative;
+}
+
+.playlist-pic {
+  width: 480px;
+  height: 282.25px;
+  border-radius: 32px;
+}
+
+.playlist-pic-container-hover {
+  width: 480px;
+  height: 282.25px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0) 0.01%,
+    rgba(0, 0, 0, 0.72) 47.92%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 32px;
+  line-height: 0;
+  position: absolute;
+  top: 0;
+  z-index: 999;
+}
+
+.playlist-pic-hover {
+  width: 64px;
+  height: 64px;
+  margin-top: 8%;
+  transition: all 0.1s linear 0.1s;
+}
+
+.playlist-pic-hover:hover {
+    width: 72px;
+    height: 72px;
+    margin-top: 8%;
+    cursor: pointer;
+}
+
+.playlist-text-hover {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.playlist-text-hover-most-listen {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}

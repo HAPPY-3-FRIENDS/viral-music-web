@@ -4,7 +4,7 @@ import "../../style/Login.css";
 import LoginGoogle from "../../asset/Login_With_Google.png";
 import Image from "../../asset/Login_Image.png";
 
-function Login() {
+function SignUp() {
   const onFinish = () => {
     message.success("Submit success!");
   };
@@ -29,7 +29,14 @@ function Login() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <h1 style={{ color: "#FACD66", fontSize: "32px" }}>Login</h1>
+            <h1 style={{ color: "#FACD66", marginTop: "8%", fontSize: "32px" }}>Register</h1>
+            <Form.Item
+              label="Full name"
+              name="Full name"
+              rules={[{ required: true, message: "Please input your Full name!" }]}
+            >
+              <Input placeholder="Input Full name" style={{height: "48px"}}/>
+            </Form.Item>
             <Form.Item
               label="Email"
               name="Email"
@@ -48,21 +55,8 @@ function Login() {
               <Input.Password placeholder="Input password" style={{height: "48px"}}/>
             </Form.Item>
             <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox style={{ color: "#FFF" }}>Remember me</Checkbox>
-              </Form.Item>
-
-              <a
-                className="login-form-forgot"
-                style={{ float: "right", color: "#FFF" }}
-                href=""
-              >
-                Forgot password
-              </a>
-            </Form.Item>
-            <Form.Item>
-              <Button className="login-submit" htmlType="submit">
-                Sign Up
+              <Button style={{marginTop: "8%"}} className="login-submit" htmlType="submit">
+                Sign In
               </Button>
             </Form.Item>
             <Form.Item className="login-google">
@@ -70,13 +64,13 @@ function Login() {
               <img src={LoginGoogle} alt="Logo" />
             </Form.Item>
             <Form.Item className="login-google">
-              <span>Don’t have an account yet? </span>
+              <span>Have an account? </span>
               <a
                 style={{ color: "#FFF" }}
                 className="login-form-register"
-                href="/signUp"
+                href="/"
               >
-                Register for free.
+                Sign in here.
               </a>
             </Form.Item>
           </Form>
@@ -89,4 +83,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

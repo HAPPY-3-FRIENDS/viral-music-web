@@ -1,0 +1,13 @@
+.song-home {
+  background: linear-gradient(
+      180deg,
+      #1d2123a4 20%,
+      rgba(29, 33, 35, 0.315) 80%
+    ),
+    url(../../src/asset/Login_Background.jpg);
+  max-width: 100%;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+}

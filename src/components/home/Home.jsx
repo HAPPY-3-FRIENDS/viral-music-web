@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import "../../style/Home.css";
 import Menu from "../menu/Menu";
@@ -7,8 +7,46 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import FIcon from "../../asset/Home_Favourite_Icon.png";
 import Singer from "../../asset/Home_Singer.jpg";
 import HNSinger from "../../asset/Home_Singer_HN.jpg";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Home() {
+  const navigate = useNavigate();
+  const [genres, setGenres] = useState([]);
+  const [artists, setArtists] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/genres`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setGenres(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/artists`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setArtists(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  console.log(artists);
+
   return (
     <div className="home-container">
       <Row>
@@ -18,26 +56,23 @@ function Home() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu
+            active1="active"
+            active2="menu-icon"
+            active3="menu-icon"
+            active4="menu-icon"
+          />
         </Col>
         <Col span={22}>
           <div className="home-tag-scroll">
             <ScrollContainer className="scroll-container">
-              <a href="#">Vpop</a>
-              <a href="#">Kpop</a>
-              <a href="#">Cpop</a>
-              <a href="#">Jpop</a>
-              <a href="#">US-UK</a>
-              <a href="#">Pop</a>
-              <a href="#">Rock</a>
-              <a href="#">Country</a>
-              <a href="#">R&B</a>
-              <a href="#">Jazz</a>
-              <a href="#">Hip Hop</a>
-              <a href="#">Reggae</a>
-              <a href="#">Funk</a>
-              <a href="#">EDM</a>
-              <a href="#">Kids</a>
+              {genres.length !== 0
+                ? genres.map((gen) => {
+                    return (
+                      <a onClick={() => navigate("/tagList")}>{gen.name}</a>
+                    );
+                  })
+                : "Waiting"}
             </ScrollContainer>
           </div>
           <Row>
@@ -137,55 +172,21 @@ function Home() {
             <h1 className="home-top-artist-header">TOP ARTIST</h1>
             <div>
               <ScrollContainer className="home-scroll-container">
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
-                <div className="home-artist-container">
-                  <img className="home-artist-img" src={Singer} alt="" />
-                  <div>
-                    <h1 className="home-artist-name">Thuy Phuong</h1>
-                    <p className="home-artist-type">Artist</p>
-                  </div>
-                </div>
+                {artists.map((item) => {
+                  return (
+                    <div className="home-artist-container">
+                      <img
+                        className="home-artist-img"
+                        src={item.avatar}
+                        alt=""
+                      />
+                      <div>
+                        <h1 className="home-artist-name">{item.name}</h1>
+                        <p className="home-artist-type">Artist</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </ScrollContainer>
             </div>
             <div>

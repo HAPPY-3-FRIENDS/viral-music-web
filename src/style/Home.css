@@ -134,6 +134,7 @@
   height: 200px;
   border: 4px solid #d9d9d9;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .home-artist-name {
@@ -142,6 +143,9 @@
   line-height: 30px;
   letter-spacing: 0.08em;
   color: #fff;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .home-scroll-container {

@@ -28,7 +28,7 @@ function PlaylistDetail() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu active1='menu-icon' active2='active' active3='menu-icon' active4='menu-icon'/>
         </Col>
         <Col span={22}>
           <div className="playlistDetail-container">

@@ -9,11 +9,13 @@ import Singer from "../../asset/Home_Singer_HN.jpg";
 import Play from "../../asset/Play_Music.png";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 function Playlist() {
   const [show, setShow] = useState(false);
   const [next, setNext] = useState(false);
   const [previous, setPrevious] = useState(true);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     setNext(true);
@@ -33,7 +35,7 @@ function Playlist() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu active1='menu-icon' active2='active' active3='menu-icon' active4='menu-icon'/>
         </Col>
         <Col span={22}>
           <div className="playlist-header-text-container">
@@ -45,7 +47,7 @@ function Playlist() {
           </div>
           <ScrollContainer className="scroll-container">
             <div className="playlist-pic-container">
-              <div className="playlist-pic-relative">
+              <div className="playlist-pic-relative" onClick={() => navigate('/playlistDetail')}>
                 <img
                   onMouseEnter={() => setShow(true)}
                   // onMouseLeave={() => setShow(false)}

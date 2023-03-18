@@ -1,10 +1,19 @@
 import { Button, Checkbox, Col, Form, Input, message, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../style/Login.css";
 import LoginGoogle from "../../asset/Login_With_Google.png";
 import Image from "../../asset/Login_Image.png";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [tokenLogin, setTokenLogin] = useState('')
+  const [role, setRole] = useState('')
+
   const onFinish = () => {
     message.success("Submit success!");
   };
@@ -12,6 +21,31 @@ function Login() {
   const onFinishFailed = () => {
     message.error("Submit failed!");
   };
+
+  if (tokenLogin.length !== 0 && role === 'User') {
+    navigate('/home');
+  }
+
+  if (tokenLogin.length !== 0 && role === 'Admin') {
+    navigate('/adminHome');
+  }
+
+  const handleLogin = () =>
+    axios
+      .post("https://localhost:44377/api/auth", {
+        username: username,
+        password: password,
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        setTokenLogin(response.data.data);
+        setRole(jwt_decode(response.data.data).role);
+        localStorage.setItem('tokenLogin', response.data.data);
+        localStorage.setItem('role', jwt_decode(response.data.data).role);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   return (
     <div className="login-container">
@@ -31,11 +65,17 @@ function Login() {
           >
             <h1 style={{ color: "#FACD66", fontSize: "32px" }}>Login</h1>
             <Form.Item
-              label="Email"
-              name="Email"
-              rules={[{ required: true, message: "Please input your Email!" }]}
+              label="Username"
+              name="Username"
+              rules={[
+                { required: true, message: "Please input your Username!" },
+              ]}
             >
-              <Input placeholder="Input email" style={{height: "48px"}}/>
+              <Input
+                placeholder="Input Username"
+                onChange={(e) => setUserName(e.target.value)}
+                style={{ height: "48px" }}
+              />
             </Form.Item>
 
             <Form.Item
@@ -45,7 +85,11 @@ function Login() {
                 { required: true, message: "Please input your password!" },
               ]}
             >
-              <Input.Password placeholder="Input password" style={{height: "48px"}}/>
+              <Input.Password
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Input password"
+                style={{ height: "48px" }}
+              />
             </Form.Item>
             <Form.Item>
               <Form.Item name="remember" valuePropName="checked" noStyle>
@@ -61,14 +105,18 @@ function Login() {
               </a>
             </Form.Item>
             <Form.Item>
-              <Button className="login-submit" htmlType="submit">
-                Sign Up
+              <Button
+                onClick={handleLogin}
+                className="login-submit"
+                htmlType="submit"
+              >
+                Sign In
               </Button>
             </Form.Item>
-            <Form.Item className="login-google">
+            {/* <Form.Item className="login-google">
               <p>or continue with</p>
               <img src={LoginGoogle} alt="Logo" />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item className="login-google">
               <span>Don’t have an account yet? </span>
               <a

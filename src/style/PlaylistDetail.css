@@ -12,6 +12,182 @@
   position: relative;
 }
 
+.ant-modal-content {
+  background: linear-gradient(
+      180deg,
+      #1d2123e3 20%,
+      rgba(29, 33, 35, 0.315) 80%
+    ),
+    url(../../src/asset/Login_Background.jpg);
+  max-width: 100%;
+  background-size: cover;
+  border-radius: 32px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  color: #fff !important;
+  border: 1px solid #ffffff25 !important;
+}
+
+.modal-footer-btn {
+  background: rgba(51, 55, 59, 0.32);
+  border: 2px solid #33373b;
+  border-radius: 8px;
+  width: 96px;
+  height: 40px;
+  color: #FFF;
+  font-size: 16px;
+}
+
+.modal-footer-btn-inactive {
+  background: rgba(51, 55, 59, 0.822);
+  border: 2px solid #33373b;
+  border-radius: 8px;
+  width: 96px;
+  height: 40px;
+  color: #FFF;
+  font-size: 16px;
+  opacity: 50%;
+  cursor: not-allowed;
+}
+
+
+
+.ant-modal-footer {
+  background: rgba(0, 0, 0, 0.64) !important;
+  margin: 0 !important;
+  padding: 16px;
+  padding-bottom: 32px;
+  border-radius: 0 0 32px 32px;
+}
+
+.songCom-mocal-input .ant-select-selection-item {
+  background: none !important;
+  color: #FFF;
+}
+
+.ant-select-selection-item {
+  background-color: #f0dcdc !important;
+  color: #000;
+}
+
+.ant-modal-close-x {
+  color: #fff;
+}
+
+.songCom-modal-content-container {
+  background: rgba(0, 0, 0, 0.64);
+  padding: 16px;
+  padding-left: 32px;
+}
+
+.modal-footer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.songCom-modal-input-file {
+  width: 480px;
+  height: 48px;
+  background: rgba(51, 55, 59, 0.56) !important;
+  outline: none;
+  border: 1px solid #33373b !important;
+  border-radius: 8px;
+  color: #fff;
+  line-height: 40px;
+}
+
+.modal-footer-container-2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.ant-select-arrow {
+  color: #ffffffb7 !important;
+}
+
+.songCom-modal-addTrack-header {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.songCom-modal-addTrack {
+  display: flex;
+  flex-direction: column;
+}
+
+.songCom-modal-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.songCom-modal-content:nth-child(3) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.songCom-modal-title {
+  width: 100px;
+  font-size: 16px;
+}
+
+.songCom-modal-input {
+  width: 480px;
+  height: 32px;
+  background: rgba(51, 55, 59, 0.56) !important;
+  outline: none;
+  border: 1px solid #33373b !important;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.songCom-modal-input-modal-2 {
+  width: 280px;
+  height: 32px;
+  background: rgba(51, 55, 59, 0.56) !important;
+  outline: none;
+  border: 1px solid #33373b !important;
+  border-radius: 8px;
+  color: #fff !important;
+}
+
+.ant-picker-suffix {
+  color: #ffffff93 !important;
+}
+
+.ant-picker-input input {
+  color: #fff !important;
+}
+
+.ant-upload {
+  color: #ffffff93;
+}
+
+.ant-select-selector {
+  background-color: none;
+  border: none;
+  color: #fff !important;
+  background: rgba(51, 55, 59, 0.56) !important;
+  outline: none;
+  border: 1px solid #33373b !important;
+}
+
+.ant-select-selection-placeholder {
+  color: #ffffff93 !important;
+}
+
+.ant-select-selection-search {
+  background: none !important;
+  color: #fff !important;
+}
+
 .playlistDetail-container {
   display: flex;
   align-items: center;
@@ -47,6 +223,23 @@
 .playlistDetail-content-container {
   display: flex;
   align-items: center;
+}
+
+.playlistDetail-btn {
+  padding: 8px 16px;
+  border-radius: 36px;
+  margin-left: 80px;
+  position: absolute;
+  top: 40px;
+  left: 580px;
+  height: 56px;
+  width: 160px;
+  color: #ffffff42;
+}
+
+.playlistDetail-btn:hover {
+  color: #ffffffaf;
+  cursor: pointer;
 }
 
 .playlistDetail-img {

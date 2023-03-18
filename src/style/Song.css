@@ -11,3 +11,12 @@
   background-attachment: fixed;
   position: relative;
 }
+
+.songCom-modal-btn {
+  background: none;
+  border: none;
+  color: #FFF;
+  font-size: 32px;
+  margin-left: 96px;
+  margin-top: 16px;
+}

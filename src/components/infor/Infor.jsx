@@ -1,5 +1,5 @@
-import { Col, Row } from "antd";
-import React from "react";
+import { Button, Col, DatePicker, Input, Modal, Row } from "antd";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Menu from "../menu/Menu";
 import SongCom from "../song/SongCom";
@@ -7,8 +7,64 @@ import Music from "../../asset/Home_Singer_HN.jpg";
 import Edit from "../../asset/Edit.png";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import PlayBottomSong from "../play_song/PlayBottomSong";
+import jwt_decode from "jwt-decode";
+import axios from "axios";
 
 function Infor() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const onChange = (date, dateString) => {
+    console.log(date, dateString);
+  };
+  const loginToken = localStorage.getItem("tokenLogin");
+  var decoded = jwt_decode(loginToken);
+  console.log(decoded.username);
+  var uname = decoded.username;
+
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/users/${uname}`, {
+        headers: {
+          Authorization: `bearer ${loginToken}`,
+        },
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        setUsername(response.data.data.username);
+        setFullname(response.data.data.fullname);
+        setAvatar(response.data.data.avatar);
+        setPassword(response.data.data.password);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const handleFullname = () =>
+    axios
+      .put(
+        `https://localhost:44377/api/users/${uname}`,
+        {
+          fullname: fullname,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${loginToken}`,
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response.data.data);
+        setFullname(response.data.data.fullname);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   return (
     <div className="playlist-container">
       <Row>
@@ -18,20 +74,25 @@ function Infor() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu
+            active1="menu-icon"
+            active2="menu-icon"
+            active3="menu-icon"
+            active4="active"
+          />
         </Col>
         <Col span={22}>
           <div className="playlistDetail-content-container">
-            <img className="artist-img" src={Music} alt="" />
+            <img className="artist-img" src={avatar} alt="" />
             <div className="playlistDetail-text-content">
               <h1 className="playlistDetail-text-content-listened">
-                Thuy Phuong
+                {fullname}
               </h1>
               <p
                 style={{ color: "rgba(255, 255, 255, 0.4)" }}
                 className="playlistDetail-text-content-include"
               >
-                phuongnlt2001
+                {username}
               </p>
             </div>
             <img
@@ -39,6 +100,7 @@ function Infor() {
               src={Edit}
               alt=""
               srcset=""
+              onClick={() => setModalOpen(true)}
             />
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -50,6 +112,60 @@ function Infor() {
               srcset=""
             />
           </div>
+          {/* add playlist */}
+          <Modal
+            centered
+            wrapClassName="songCom-modal-addTrack-container"
+            open={modalOpen}
+            width={480}
+            maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}
+            onOk={() => setModalOpen(false)}
+            onCancel={() => setModalOpen(false)}
+            footer={[
+              <div className="modal-footer-container-2">
+                <Button
+                  key="back"
+                  type="link"
+                  onClick={() => setModalOpen(false)}
+                  style={{ color: "#FFF" }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key="submit"
+                  type="primary"
+                  className="modal-footer-btn"
+                  onClick={() => [handleFullname, setModalOpen(false)]}
+                >
+                  Update
+                </Button>
+              </div>,
+            ]}
+          >
+            <div className="songCom-modal-addTrack">
+              <p className="songCom-modal-addTrack-header">EDIT INFOR</p>
+              <div className="songCom-modal-content-container">
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Full name</p>
+                  <Input
+                    value={fullname}
+                    onChange={(e) => setFullname(e.target.value)}
+                    className="songCom-modal-input-modal-2"
+                    placeholder=""
+                  />
+                </div>
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Password</p>
+                  <Input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="songCom-modal-input-modal-2"
+                    placeholder=""
+                  />
+                </div>
+              </div>
+            </div>
+          </Modal>
           <div className="playlistDetail-list-container">
             <SongCom display="none" />
             <SongCom display="none" />

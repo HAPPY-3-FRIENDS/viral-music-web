@@ -8,8 +8,10 @@ import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import Music from "../../asset/Playlist_IMG.jpg";
 import PlayBottomSong from "../play_song/PlayBottomSong";
 import SongCom from "../song/SongCom";
+import { useNavigate } from "react-router-dom";
 
 function TagList() {
+  const navigate = useNavigate();
   return (
     <div className="playlistDetail-home">
       <Row>
@@ -19,11 +21,11 @@ function TagList() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu active1='active' active2='menu-icon' active3='menu-icon' active4='menu-icon'/>
         </Col>
         <Col span={22}>
           <div className="playlistDetail-container">
-            <ArrowLeftOutlined className="playlistDetail-arrow-left" />
+            <ArrowLeftOutlined className="playlistDetail-arrow-left" onClick={() => navigate(-1)}/>
             <div className="playlistDetail-text-container">
               <p className="playlistDetail-text-playlist">VPOP</p>
               <RightOutlined className="playlistDetail-arrow-right" />

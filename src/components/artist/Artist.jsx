@@ -28,7 +28,7 @@ function Artist() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu />
+          <Menu active1='active' active2='menu-icon' active3='menu-icon' active4='menu-icon'/>
         </Col>
         <Col span={22}>
           <div className="playlistDetail-container">

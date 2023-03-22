@@ -42,6 +42,7 @@ function Login() {
         setRole(jwt_decode(response.data.data).role);
         localStorage.setItem('tokenLogin', response.data.data);
         localStorage.setItem('role', jwt_decode(response.data.data).role);
+        localStorage.setItem('username', jwt_decode(response.data.data).username);
       })
       .catch(function (error) {
         console.log(error);

@@ -30,14 +30,10 @@
 }
 
 .home-banner-container {
-  background: url(../asset/Home_Banner.jpg);
   height: 614px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  position: relative;
   margin-top: 2%;
   border-radius: 40px;
-  mix-blend-mode: hard-light;
 }
 
 .home-tag-scroll a:hover {
@@ -73,6 +69,7 @@
   height: 80px;
   margin-left: 6%;
   border-radius: 8px;
+  object-fit: cover;
 }
 
 .home-top-charts-song-favourite {
@@ -127,6 +124,7 @@
   margin-right: 40px;
   padding-left: 24px;
   padding-right: 24px;
+  cursor: pointer;
 }
 
 .home-artist-img {
@@ -151,7 +149,6 @@
 .home-scroll-container {
   display: flex;
   width: 1628px;
-  margin-top: 40px;
 }
 
 .home-type-container {
@@ -166,6 +163,7 @@
   color: #fff;
   padding: 4px 32px 4px 32px;
   margin-right: 32px;
+  margin-bottom: 16px;
 }
 
 .home-type-text-container {
@@ -177,6 +175,7 @@
   height: 120px;
   border-radius: 16px;
   border: 0.25px solid #d9d9d9;
+  object-fit: cover;
 }
 
 .home-type-name {
@@ -185,6 +184,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.home-top-chart-container {
+  height: 628px;
+  overflow-y: hidden;
 }
 
 .home-type-singer {

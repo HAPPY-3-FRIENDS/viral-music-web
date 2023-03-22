@@ -12,7 +12,8 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import axios from "axios";
 import swal from "sweetalert";
 
-const URL = "https://localhost:44377/api/tracks";
+
+
 
 function AdminHome() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function AdminHome() {
   const [modalOpen3, setModalOpen3] = useState(false);
   const [modalOpen4, setModalOpen4] = useState(false);
   const [modalOpen5, setModalOpen5] = useState(false);
+  const [modalOpen6, setModalOpen6] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [title, setTitle] = useState("");
   const [id, setId] = useState();
@@ -29,18 +31,39 @@ function AdminHome() {
   const [avatar, setAvatar] = useState("");
   const [imgUrl, setImgUrl] = useState(null);
   const [mp3, setMp3] = useState(null);
-  const [options, setOptions] = useState([]);
   const [genres, setGenres] = useState([]);
   const [genre, setGenre] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [artistId, setArtistId] = useState([]);
   const [selectedItems, setSelectedItems] = useState("");
-  const [selectedGenreItems, setSelectedGenreItems] = useState([]);
+  const [selectedGenreItems, setSelectedGenreItems] = useState("");
+  const [artists, setArtists] = useState([]);
+  const [genreSelected, setGenreSelected] = useState("");
+  const [genresFilter, setGenresFilter] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/genres/genrefilter`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setGenresFilter(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const handleChange = (value) => {
+    setGenreSelected(value);
+  };
 
   const handleTrack = () => {
     axios
       .post(
-        URL,
+        'https://localhost:44377/api/tracks',
         {
           title: title,
           image: imgUrl,
@@ -53,13 +76,12 @@ function AdminHome() {
         }
       )
       .then((res) => {
-        console.log(res.data.data);
         setId(res.data.data.id);
         res.status === 201
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
-        setModalOpen3(true);
         setModalOpen(false);
+        setModalOpen3(true);
       })
       .catch((res) => {
         swal("Fail!", "Try again", "error");
@@ -80,6 +102,7 @@ function AdminHome() {
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
         setModalOpen3(false);
+        setSelectedItems([]);
         setModalOpen4(true);
       })
       .catch((res) => {
@@ -87,36 +110,20 @@ function AdminHome() {
       });
   };
 
-  useEffect(() => {
-    axios
-      .get(`https://localhost:44377/api/artists`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
-        },
-      })
-      .then(function (response) {
-        setOptions(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [options]);
-
-  useEffect(() => {
-    axios
-      .get(`https://localhost:44377/api/tracks`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data.data)
-        setTracks(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  });
+  // useEffect(() => {
+  //   axios
+  //     .get(`https://localhost:44377/api/tracks`, {
+  //       headers: {
+  //         Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+  //       },
+  //     })
+  //     .then(function (response) {
+  //       setTracks(response.data.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // });
 
   const handleNewArtist = () => {
     axios
@@ -138,7 +145,40 @@ function AdminHome() {
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
         setModalOpen2(false);
+        setName("");
+        setProfile("");
+        setAvatar("");
         setModalOpen3(true);
+      })
+      .catch((res) => {
+        swal("Fail!", "Try again", "error");
+      });
+  };
+
+  ///
+  const handleNewArtistRep = () => {
+    axios
+      .post(
+        "https://localhost:44377/api/artists",
+        {
+          name: name,
+          profile: profile,
+          avatar: avatar,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+          },
+        }
+      )
+      .then((res) => {
+        res.status === 201
+          ? swal("Successfully!", res.data.message, "success")
+          : swal("Fail!", "Try again", "error");
+        setModalOpen6(false);
+        setName("");
+        setProfile("");
+        setAvatar("");
       })
       .catch((res) => {
         swal("Fail!", "Try again", "error");
@@ -153,7 +193,7 @@ function AdminHome() {
       headers: {
         Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
       },
-      data: selectedItems, // This is the body part
+      data: [genreSelected], // This is the body part
     })
       .then((res) => {
         res.status === 201
@@ -179,7 +219,7 @@ function AdminHome() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [genres]);
+  }, [genre]);
 
   const handleNewGenre = () => {
     axios
@@ -195,8 +235,6 @@ function AdminHome() {
         }
       )
       .then((res) => {
-        console.log(res.status);
-        console.log(res);
         res.status === 201
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
@@ -253,7 +291,26 @@ function AdminHome() {
     );
   };
 
-  console.log(tracks.map((item) => item.trackGenres))
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/artists`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setArtists(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  // let newArr = tracks.map((value, index, tracks) => {
+  //   return value.trackGenres[0].genre.name;
+  // });
+
+  // let arrArray = Array.from(new Set(newArr));
 
   return (
     <div className="playlistDetail-home">
@@ -272,9 +329,38 @@ function AdminHome() {
           <MenuAdmin active1="menu-icon" active2="menu-icon" />
         </Col>
         <Col span={22}>
-          {genres.length !== 0
-            ? genres.map((item) => {
+          <h1 className="home-top-artist-header">TOP ARTIST</h1>
+          <Icon
+            onClick={() => setModalOpen6(true)}
+            className="playlistDetail-btn-artist"
+            icon="mdi:plus-circle-outline"
+          />
+          <div>
+            <ScrollContainer className="home-scroll-container">
+              {artists.map((item, index) => {
                 return (
+                  // <div onClick={() => navigate("/artist", { state: { id: item.id } })} className="home-artist-container" style={{cursor: 'pointer'}} >
+                  <div
+                    key={index}
+                    onClick={() =>
+                      navigate("/artist", { state: { id: item.id } })
+                    }
+                    className="home-artist-container"
+                    style={{ cursor: "pointer", zIndex: '999' }}
+                  >
+                    <img className="home-artist-img" src={item.avatar} alt="" />
+                    <div>
+                      <h1 className="home-artist-name">{item.name}</h1>
+                      <p className="home-artist-type">Artist</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </ScrollContainer>
+          </div>
+          {genresFilter.length !== 0
+            ? genresFilter.map((item) =>
+                item.tracks.length !== 0 ? (
                   <div>
                     <div className="playlistDetail-content-container">
                       <h1 className="home-top-artist-header">{item.name}</h1>
@@ -287,40 +373,38 @@ function AdminHome() {
                         src={Edit}
                         alt=""
                         srcset=""
-                        onClick={() => navigate("/adminEdit")}
+                        onClick={() =>
+                          navigate("/adminEdit", { state: { id: item.id } })
+                        }
                       />
                     </div>
-                    <div style={{ marginTop: "-32px" }}>
+                    <div>
                       <ScrollContainer className="home-scroll-container">
-                        {tracks.length !== 0
-                          ? tracks.map((track) => {
-                              return (
-                                <div className="home-type-container">
-                                  <img
-                                    className="home-type-img"
-                                    src={track.image}
-                                    alt=""
-                                  />
-                                  <div className="home-type-text-container">
-                                    <p className="home-type-name">
-                                      {track.title}
-                                    </p>
-                                    <p className="home-type-singer">
-                                      {track.trackArtists[0].artistId}
-                                    </p>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          : <p style={{color: "#FFF"}}>Chưa có dữ liệu</p>}
+                        {item.tracks.map((song, index) => {
+                          return (
+                            <div className="home-type-container">
+                              <img
+                                className="home-type-img"
+                                src={song.image}
+                                alt=""
+                              />
+                              <div className="home-type-text-container">
+                                <p className="home-type-name">{song.title}</p>
+                                {song.artists.map((art) => {
+                                  return art.length > 1 ? art : `${art} `;
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </ScrollContainer>
                     </div>
                   </div>
-                );
-              })
+                ) : (
+                  ""
+                )
+              )
             : "Chưa có dữ liệu"}
-
-          {/* add track */}
           <Modal
             centered
             wrapClassName="songCom-modal-addTrack-container"
@@ -464,6 +548,69 @@ function AdminHome() {
             </div>
           </Modal>
 
+          {/* add rep artist */}
+          <Modal
+            centered
+            wrapClassName="songCom-modal-addTrack-container"
+            open={modalOpen6}
+            width={700}
+            maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}
+            onCancel={() => setModalOpen6(false)}
+            footer={[
+              <div className="modal-footer-container-2">
+                <Button
+                  key="back"
+                  type="link"
+                  onClick={() => setModalOpen6(false)}
+                  style={{ color: "#FFF" }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key="submit"
+                  type="submit"
+                  className="modal-footer-btn"
+                  onClick={() => [handleNewArtistRep()]}
+                >
+                  Add
+                </Button>
+              </div>,
+            ]}
+          >
+            <div className="songCom-modal-addTrack">
+              <p className="songCom-modal-addTrack-header">ADD NEW ARTIST</p>
+              <div className="songCom-modal-content-container">
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Name</p>
+                  <Input
+                    className="songCom-modal-input"
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Name of artist"
+                    value={name}
+                  />
+                </div>
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Profile</p>
+                  <Input
+                    className="songCom-modal-input"
+                    onChange={(e) => setProfile(e.target.value)}
+                    placeholder="Description profile"
+                    value={profile}
+                  />
+                </div>
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Avatar</p>
+                  <Input
+                    className="songCom-modal-input"
+                    onChange={(e) => setAvatar(e.target.value)}
+                    placeholder="Link here"
+                    value={avatar}
+                  />
+                </div>
+              </div>
+            </div>
+          </Modal>
+
           {/* add artist */}
           <Modal
             centered
@@ -479,7 +626,7 @@ function AdminHome() {
                   className="modal-footer-btn"
                   key="link"
                   type="link"
-                  onClick={() => setModalOpen2(true)}
+                  onClick={() => [setModalOpen3(false), setModalOpen2(true)]}
                 >
                   Add...
                 </Button>
@@ -509,7 +656,7 @@ function AdminHome() {
                 ADD ARTIST TO TRACK
               </p>
               <div className="songCom-modal-content-container">
-                <div className="songCom-modal-content">
+                <div className="songCom-modal-content-1">
                   <p className="songCom-modal-title">Artist</p>
                   <Select
                     mode="multiple"
@@ -520,7 +667,7 @@ function AdminHome() {
                     style={{
                       width: "80%",
                     }}
-                    options={options.map((item) => ({
+                    options={artists.map((item) => ({
                       value: item.id,
                       label: item.name,
                     }))}
@@ -624,10 +771,10 @@ function AdminHome() {
                 <div className="songCom-modal-content">
                   <p className="songCom-modal-title">Genre</p>
                   <Select
-                    value={selectedGenreItems}
-                    className="songCom-mocal-input"
+                    onChange={handleChange}
                     placeholder="Select genre"
-                    onChange={setSelectedGenreItems}
+                    value={genreSelected}
+                    className="songCom-mocal-input"
                     style={{
                       width: "80%",
                       background: "none",

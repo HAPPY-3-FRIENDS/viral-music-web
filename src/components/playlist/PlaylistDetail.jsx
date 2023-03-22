@@ -17,8 +17,13 @@ import Volumn from "../../asset/Volumn.png";
 import Audio from "../audio/Audio";
 import PlayBottomSong from "../play_song/PlayBottomSong";
 import SongCom from "../song/SongCom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PlaylistDetail() {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
+  console.log(state.id);
   return (
     <div className="playlistDetail-home">
       <Row>
@@ -28,47 +33,37 @@ function PlaylistDetail() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu active1='menu-icon' active2='active' active3='menu-icon' active4='menu-icon'/>
+          <Menu
+            active1="menu-icon"
+            active2="active"
+            active3="menu-icon"
+            active4="menu-icon"
+          />
         </Col>
         <Col span={22}>
           <div className="playlistDetail-container">
-            <ArrowLeftOutlined className="playlistDetail-arrow-left" />
+            <ArrowLeftOutlined
+              onClick={() => navigate(-1)}
+              className="playlistDetail-arrow-left"
+            />
             <div className="playlistDetail-text-container">
               <p className="playlistDetail-text-playlist">Playlist</p>
               <RightOutlined className="playlistDetail-arrow-right" />
-              <p>Most Listened</p>
+              <p>{state.name}</p>
             </div>
           </div>
           <div className="playlistDetail-content-container">
-            <img className="playlistDetail-img" src={Music} alt="" />
+            <img className="playlistDetail-img" src={state.image} alt="" />
             <div className="playlistDetail-text-content">
               <h1 className="playlistDetail-text-content-listened">
-                Most listened
+                {state.name}
               </h1>
               <p className="playlistDetail-text-content-description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut
-                aliquam, purus sit amet luctus venenatis, Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit ut aliquam, purus sit amet
-                luctus venen.
+                Hãy tận hưởng âm nhạc theo cách riêng của bạn
               </p>
-              <p className="playlistDetail-text-content-include">
-                64 songs ~ 16hrs
-              </p>
-              <div className="playlistDetail-text-button-play-all">
-                <img
-                  className="playlistDetail-button-play-all"
-                  src={PlayYel}
-                  alt=""
-                />
-                <p className="playlistDetail-text-play-all">Play all</p>
-              </div>
             </div>
           </div>
           <div className="playlistDetail-list-container">
-            <SongCom display="none"/>
-            <SongCom display="none"/>
-            <SongCom display="none"/>
-            <SongCom display="none"/>
           </div>
         </Col>
       </Row>

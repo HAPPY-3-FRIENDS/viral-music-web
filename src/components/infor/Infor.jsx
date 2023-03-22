@@ -9,6 +9,10 @@ import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import PlayBottomSong from "../play_song/PlayBottomSong";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import ScrollContainer from "react-indiana-drag-scroll";
+import { useNavigate } from "react-router-dom";
+import Play from "../../asset/Play_Music.png";
+
 
 function Infor() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -16,6 +20,8 @@ function Infor() {
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
   const [avatar, setAvatar] = useState("");
+  const navigate = useNavigate();
+  const [playlist, setPlaylist] = useState([]);
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
@@ -37,6 +43,26 @@ function Infor() {
         setFullname(response.data.data.fullname);
         setAvatar(response.data.data.avatar);
         setPassword(response.data.data.password);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://localhost:44377/api/playlists/list/${localStorage.getItem(
+          "username"
+        )}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+          },
+        }
+      )
+      .then(function (response) {
+        setPlaylist(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -166,18 +192,49 @@ function Infor() {
               </div>
             </div>
           </Modal>
-          <div className="playlistDetail-list-container">
-            <SongCom display="none" />
-            <SongCom display="none" />
-            <SongCom display="none" />
-            <SongCom display="none" />
-            <div className="playlistDetail-more">
-              <p>See more</p>
+          <ScrollContainer className="scroll-container">
+            <div className="playlist-pic-container">
+              {playlist.length !== 0
+                ? playlist.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="playlist-pic-relative"
+                        onClick={() =>
+                          navigate("/playlistDetail", {
+                            state: {
+                              id: item.id,
+                              name: item.name,
+                              image: item.image,
+                            },
+                          })
+                        }
+                      >
+                        <img
+                          className="playlist-pic"
+                          src={item.image}
+                          alt="Music pic"
+                        />
+                        <div className="playlist-pic-container-hover">
+                          <img
+                            className="playlist-pic-hover"
+                            src={Play}
+                            alt="play"
+                          />
+                          <div className="playlist-text-hover">
+                            <p className="playlist-text-hover-most-listen">
+                              {item.name}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                : "No data"}
             </div>
-          </div>
+          </ScrollContainer>
         </Col>
       </Row>
-      <PlayBottomSong />
     </div>
   );
 }

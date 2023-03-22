@@ -71,16 +71,12 @@ function PlayBottomSong() {
         },
       })
       .then(function (response) {
-        console.log(response.data.data);
         setTracks(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   });
-
-  console.log(tracks.length);
-  console.log(volume);
 
   const handlePrevios = () => {
     if (audioIndex === 0) {

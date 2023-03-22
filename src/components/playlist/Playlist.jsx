@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import "../../style/Playlist.css";
 import Header from "../Header";
@@ -10,12 +10,38 @@ import Play from "../../asset/Play_Music.png";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Playlist() {
   const [show, setShow] = useState(false);
+  const [playlist, setPlaylist] = useState([]);
   const [next, setNext] = useState(false);
   const [previous, setPrevious] = useState(true);
   const navigate = useNavigate();
+
+  const handlePlaylist = (index) => {
+    setShow(!show);
+  };
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://localhost:44377/api/playlists/list/${localStorage.getItem(
+          "username"
+        )}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+          },
+        }
+      )
+      .then(function (response) {
+        setPlaylist(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   const handleNext = () => {
     setNext(true);
@@ -35,7 +61,12 @@ function Playlist() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu active1='menu-icon' active2='active' active3='menu-icon' active4='menu-icon'/>
+          <Menu
+            active1="menu-icon"
+            active2="active"
+            active3="menu-icon"
+            active4="menu-icon"
+          />
         </Col>
         <Col span={22}>
           <div className="playlist-header-text-container">
@@ -47,400 +78,39 @@ function Playlist() {
           </div>
           <ScrollContainer className="scroll-container">
             <div className="playlist-pic-container">
-              <div className="playlist-pic-relative" onClick={() => navigate('/playlistDetail')}>
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="playlist-pic-relative">
-                <img
-                  onMouseEnter={() => setShow(true)}
-                  // onMouseLeave={() => setShow(false)}
-                  className="playlist-pic"
-                  src={Music}
-                  alt="Music pic"
-                />
-                {show && (
-                  <div
-                    onMouseLeave={() => setShow(false)}
-                    className="playlist-pic-container-hover"
-                  >
-                    <img className="playlist-pic-hover" src={Play} alt="play" />
-                    <div className="playlist-text-hover">
-                      <p className="playlist-text-hover-most-listen">
-                        Most Listened
-                      </p>
-                      <p className="playlist-text-hover-date">22 - 12 - 2021</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {playlist.length !== 0
+                ? playlist.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="playlist-pic-relative"
+                        onClick={() => navigate("/playlistDetail", {state: { id: item.id, name: item.name, image: item.image }})}
+                      >
+                        <img
+                          onMouseEnter={() => handlePlaylist(index)}
+                          className="playlist-pic"
+                          src={item.image}
+                          alt="Music pic"
+                        />
+                        <div className="playlist-pic-container-hover">
+                          <img
+                            className="playlist-pic-hover"
+                            src={Play}
+                            alt="play"
+                          />
+                          <div className="playlist-text-hover">
+                            <p className="playlist-text-hover-most-listen">
+                              {item.name}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                : "No data"}
             </div>
           </ScrollContainer>
-          <h1 className="playlist-header-text-top">PLAYLIST</h1>
-          {previous && (
-            <div className="playlist-scroll-container">
-              <div>
-                <div className="playlist-user-container-box">
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                </div>
-                <div
-                  style={{ marginTop: "24px", marginBottom: "48px" }}
-                  className="playlist-user-container-box"
-                >
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                </div>
-              </div>
-              <RightOutlined
-                className="playlist-button-next"
-                onClick={handleNext}
-              />
-            </div>
-          )}
-          {next && (
-            <div className="playlist-scroll-container">
-              <LeftOutlined
-                className="playlist-button-next"
-                onClick={handlePrevious}
-              />
-              <div>
-                <div className="playlist-user-container-box">
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                </div>
-                <div
-                  style={{ marginTop: "24px", marginBottom: "48px" }}
-                  className="playlist-user-container-box"
-                >
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                  <div className="playlist-user-container">
-                    <img
-                      className="playlist-user-img"
-                      src={Singer}
-                      alt="playlist"
-                    />
-                    <div className="playlist-user-text-container">
-                      <p className="playlist-user-title">Thanh xuân</p>
-                      <p className="playlist-user-date">27 - 12 - 2022</p>
-                    </div>
-                    <img
-                      className="playlist-user-play"
-                      src={PlayYel}
-                      alt="playlist"
-                    />
-                  </div>
-                </div>
-              </div>
-              <RightOutlined
-                className="playlist-button-next"
-                onClick={handleNext}
-              />
-            </div>
-          )}
+          )
         </Col>
       </Row>
     </div>

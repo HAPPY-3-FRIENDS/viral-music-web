@@ -283,6 +283,11 @@
   object-fit: cover;
 }
 
+.songCom-number {
+  width: 100px;
+  text-align: center;
+}
+
 .playlistDetail-text-content {
   color: #fff;
   width: 500px;

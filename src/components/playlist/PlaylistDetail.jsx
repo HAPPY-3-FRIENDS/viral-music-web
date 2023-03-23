@@ -32,6 +32,7 @@ function PlaylistDetail() {
   const [volume, setVolume] = useState(60);
   const [tracksSearch, setTracksSearch] = useState([]);
 
+
   const onSearch = (value) =>
     axios
       .get(`https://localhost:44377/api/tracks/name/${value}`, {
@@ -183,6 +184,9 @@ function PlaylistDetail() {
                       image={item.track.image}
                       handlePlay={() => setAudioIndex(index)}
                       name={item.track.title}
+                      artist={item.track.trackArtists.map((i) => {
+                        return item.track.trackArtists.length > 2 ? i.artist.name : `${i.artist.name} `
+                      })}
                       display="none"
                       right="4%"
                       lineDisable="none"

@@ -51,7 +51,7 @@ function SongCom(props) {
     <div>
       <div style={{width: props.widthCon}} className="playlistDetail-song-list-container">
         <div style={{ display: props.display }}>
-          <h1 style={{ marginLeft: "32px", marginRight: "32px" }}>{props.id}</h1>
+          <h1 className="songCom-number">{props.id}</h1>
           <img src={Line} alt="" srcset="" />
         </div>
         <img

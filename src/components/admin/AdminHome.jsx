@@ -406,7 +406,6 @@ function AdminHome() {
                               />
                               <div className="home-type-text-container">
                                 <p className="home-type-name">{song.title}</p>
-                                {console.log(song.artists)}
                                 {song.artists.map((art) => {
                                   return song.artists.length > 2 ? art : `${art} `;
                                 })}

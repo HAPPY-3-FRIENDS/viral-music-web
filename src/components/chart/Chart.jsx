@@ -146,6 +146,9 @@ function Chart() {
                       id={index + 1}
                       image={item.image}
                       name={item.title}
+                      artist={item.trackArtists.map((i) => {
+                        return item.trackArtists.length > 2 ? i.artist.name : `${i.artist.name} `
+                      })}
                       duration={formatTime(duration)}
                       handlePlay={() => [setAudioIndex(index), setPlay(true)]}
                       display="flex"

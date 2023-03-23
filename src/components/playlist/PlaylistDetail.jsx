@@ -18,10 +18,86 @@ import Audio from "../audio/Audio";
 import PlayBottomSong from "../play_song/PlayBottomSong";
 import SongCom from "../song/SongCom";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function PlaylistDetail() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const [tracks, setTracks] = useState([]);
+  const audioRef = useRef();
+  const [audioIndex, setAudioIndex] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isPlay, setPlay] = useState(false);
+  const [volume, setVolume] = useState(60);
+
+  const handleLoadedData = () => {
+    setDuration(audioRef.current.duration);
+    if (isPlay) audioRef.current.play();
+  };
+
+  const formatTime = (time) => {
+    if (time && !isNaN(time)) {
+      const minutes = Math.floor(time / 60);
+      const formatMinutes = minutes < 10 ? `0${minutes} ` : ` ${minutes}`;
+      const seconds = Math.floor(time % 60);
+      const formatSeconds = seconds < 10 ? ` 0${seconds}` : ` ${seconds}`;
+      return `${formatMinutes}:${formatSeconds}`;
+    }
+    return "00:00";
+  };
+
+  const handlePausePlayClick = () => {
+    if (isPlay) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setPlay(!isPlay);
+  };
+
+  const handleTimeSliderChange = ({ x }) => {
+    audioRef.current.currentTime = x;
+    setCurrentTime(x);
+
+    if (!isPlay) {
+      setPlay(true);
+      audioRef.current.play();
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef && tracks.length !== 0) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, [tracks, volume, audioRef]);
+
+  const handlePrevios = () => {
+    if (audioIndex === 0) {
+      setAudioIndex(audioIndex % tracks.length);
+    } else {
+      setAudioIndex((audioIndex - 1) % tracks.length);
+    }
+  };
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `https://localhost:44377/api/track-in-playlist`,
+      headers: {
+        Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+      },
+      params: { playListId: state.id },
+    })
+      .then((res) => {
+        console.log(res);
+        setTracks(res.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  console.log(tracks);
 
   console.log(state.id);
   return (
@@ -61,13 +137,155 @@ function PlaylistDetail() {
               <p className="playlistDetail-text-content-description">
                 Hãy tận hưởng âm nhạc theo cách riêng của bạn
               </p>
+              <div className="playlistDetail-text-button-play-all">
+                <img
+                  className="playlistDetail-button-play-all"
+                  src={PlayYel}
+                  alt=""
+                />
+                <p
+                  onClick={() => setAudioIndex(0)}
+                  className="playlistDetail-text-play-all"
+                >
+                  Play all
+                </p>
+              </div>
             </div>
           </div>
           <div className="playlistDetail-list-container">
+            {tracks.length !== 0 ? (
+              tracks.map((item, index) => {
+                return (
+                  <div>
+                    <SongCom
+                      duration={formatTime(duration)}
+                      image={item.track.image}
+                      handlePlay={() => setAudioIndex(index)}
+                      name={item.track.title}
+                      display="none"
+                      right="4%"
+                      lineDisable="none"
+                      loveDisable="none"
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <p style={{ color: "#FFF" }}>No songs</p>
+            )}
           </div>
         </Col>
       </Row>
-      <PlayBottomSong />
+      {tracks.length !== 0
+        ? tracks.map((item, index) => {
+            return (
+              <div>
+                <div key={index} className="playlistDetail-bottom-container">
+                  <img
+                    className="playlistDetail-song-bottom-ava"
+                    src={tracks[audioIndex].track.image}
+                    alt=""
+                    srcset=""
+                  />
+                  <div className="playlistDetail-song-bottom-container">
+                    <h3 className="playlistDetail-song-bottom-name">
+                      {tracks[audioIndex].track.title}
+                    </h3>
+                  </div>
+                  <div className="playlistDetail-song-bottom-control-container-full">
+                    <div className="playlistDetail-song-bottom-control-container">
+                      <div
+                        className="playlistDetail-song-bottom-control-prev-button"
+                        onClick={handlePrevios}
+                      >
+                        <img src={Previous} alt="" srcset="" />
+                      </div>
+                      <div
+                        className="playlistDetail-song-bottom-control-pause-play-button"
+                        onClick={handlePausePlayClick}
+                      >
+                        {isPlay ? (
+                          <img
+                            className="playlistDetail-song-bottom-control-pause-button"
+                            src={Pause}
+                            alt=""
+                            srcset=""
+                          />
+                        ) : (
+                          <img
+                            className="playlistDetail-song-bottom-control-play-button"
+                            src={PlayYel}
+                            alt=""
+                            srcset=""
+                          />
+                        )}
+                      </div>
+                      <div
+                        className="playlistDetail-song-bottom-control-next-Button"
+                        onClick={() =>
+                          setAudioIndex((audioIndex + 1) % tracks.length)
+                        }
+                      >
+                        <img src={Next} alt="" srcset="" />
+                      </div>
+                    </div>
+                    <div className="playlistDetail-song-bottom-control-play-duration">
+                      <TimeSlider
+                        axis="x"
+                        xmax={duration}
+                        x={currentTime}
+                        onChange={handleTimeSliderChange}
+                        styles={{
+                          track: {
+                            backgroundColor: "rgba(255, 255, 255, 0.04);",
+                            height: "5px",
+                            width: "1112px",
+                          },
+                          active: {
+                            backgroundColor: "#FACD66",
+                            height: "5px",
+                          },
+                          thumb: {
+                            width: "12px",
+                            height: "12px",
+                            backgroundColor: "#FACD66",
+                            borderRadius: 50,
+                          },
+                        }}
+                      />
+                      <p className="playlistDetail-song-bottom-control-duration">
+                        {formatTime(currentTime)}
+                      </p>
+                    </div>
+                    <audio
+                      ref={audioRef}
+                      src={tracks[audioIndex].track.source}
+                      onLoadedData={handleLoadedData}
+                      onTimeUpdate={() =>
+                        setCurrentTime(audioRef.current.currentTime)
+                      }
+                      onEnded={() =>
+                        setAudioIndex((audioIndex + 1) % tracks.length)
+                      }
+                    />
+                  </div>
+                  <div className="playlistDetail-song-bottom-control-volumn-container">
+                    <img src={Volumn} alt="" srcset="" />
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      className="playlistDetail-song-bottom-control-volumn"
+                      value={volume}
+                      onChange={(e) => setVolume(e.target.value)}
+                    />
+                  </div>
+                </div>
+                ) : ( "loading" )
+              </div>
+            );
+          })
+        : "loading"}
     </div>
   );
 }

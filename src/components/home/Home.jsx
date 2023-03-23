@@ -1,4 +1,4 @@
-import { Button, Col, Input, Modal, Row } from "antd";
+import { Button, Col, Input, Modal, Row, Select } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../Header";
 import "../../style/Home.css";
@@ -31,9 +31,13 @@ function Home() {
   const [volume, setVolume] = useState(60);
   const [tracks, setTracks] = useState([]);
   const [genresFilter, setGenresFilter] = useState([]);
-  const [image, setImage] = useState('');
-  const [name, setName] = useState('');
+  const [image, setImage] = useState("");
+  const [name, setName] = useState("");
+  const [playlistName, setPlaylistName] = useState([]);
+  const [playlistSelected, setPlaylistSelected] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [modal2Open, setModal2Open] = useState(false);
+  const [newId, setNewId] = useState();
 
   const handlePlaylist = () => {
     axios
@@ -55,12 +59,61 @@ function Home() {
         res.status === 201
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
+        setModal2Open(false);
+      })
+      .catch((res) => {
+        swal("Fail!", "Try again", "error");
+      });
+  };
+
+  const handleTrackInPlaylist = () => {
+    axios
+      .post(
+        `https://localhost:44377/api/track-in-playlist`,
+        {
+          playlistId: playlistSelected,
+          trackId: newId,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+          },
+        }
+      )
+      .then((res) => {
+        res.status === 201
+          ? swal("Successfully!", res.data.message, "success")
+          : swal("Fail!", "Try again", "error");
         setModalOpen(false);
       })
       .catch((res) => {
         swal("Fail!", "Try again", "error");
       });
   };
+
+  const handleChange = (value) => {
+    setPlaylistSelected(value);
+  };
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://localhost:44377/api/playlists/list/${localStorage.getItem(
+          "username"
+        )}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+          },
+        }
+      )
+      .then(function (response) {
+        setPlaylistName(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  });
 
   useEffect(() => {
     axios
@@ -199,7 +252,14 @@ function Home() {
             onOk={() => setModalOpen(false)}
             onCancel={() => setModalOpen(false)}
             footer={[
-              <div className="modal-footer-container-2">
+              <div className="modal-footer-container">
+                <Button
+                  className="modal-footer-btn"
+                  key="link"
+                  onClick={() => setModal2Open(true)}
+                >
+                  Add...
+                </Button>
                 <div>
                   <Button
                     key="back"
@@ -213,7 +273,7 @@ function Home() {
                     key="submit"
                     type="primary"
                     className="modal-footer-btn"
-                    onClick={handlePlaylist}
+                    onClick={handleTrackInPlaylist}
                   >
                     Save
                   </Button>
@@ -223,15 +283,65 @@ function Home() {
           >
             <div className="songCom-modal-addTrack">
               <p className="songCom-modal-addTrack-header">
-                ADD TRACK TO YOUR PLAYLIST
+                ADD TRACK TO MY PLAYLIST
               </p>
               <div className="songCom-modal-content-container">
                 <div className="songCom-modal-content">
-                  <p className="songCom-modal-title">Name</p>
+                  <p className="songCom-modal-title">Playlist (*)</p>
+                  <Select
+                    options={playlistName.map((item) => ({
+                      value: item.id,
+                      label: item.name,
+                    }))}
+                    onChange={handleChange}
+                    value={playlistSelected}
+                    className="songCom-modal-input"
+                    placeholder="Choose playlist"
+                  />
+                </div>
+              </div>
+            </div>
+          </Modal>
+
+          {/* add playlist */}
+          <Modal
+            centered
+            wrapClassName="songCom-modal-addTrack-container"
+            open={modal2Open}
+            width={480}
+            maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}
+            onOk={() => setModal2Open(false)}
+            onCancel={() => setModal2Open(false)}
+            footer={[
+              <div className="modal-footer-container-2">
+                <Button
+                  key="back"
+                  type="link"
+                  onClick={() => setModal2Open(false)}
+                  style={{ color: "#FFF" }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key="submit"
+                  type="primary"
+                  className="modal-footer-btn"
+                  onClick={handlePlaylist}
+                >
+                  Create
+                </Button>
+              </div>,
+            ]}
+          >
+            <div className="songCom-modal-addTrack">
+              <p className="songCom-modal-addTrack-header">NEW PLAYLIST</p>
+              <div className="songCom-modal-content-container">
+                <div className="songCom-modal-content">
+                  <p className="songCom-modal-title">Name (*)</p>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="songCom-modal-input"
+                    className="songCom-modal-input-modal-2"
                     placeholder=""
                   />
                 </div>
@@ -239,7 +349,7 @@ function Home() {
                   <p className="songCom-modal-title">Image</p>
                   <div>
                     <Input
-                      className="songCom-modal-input"
+                      className="songCom-modal-input-modal-2"
                       onChange={(e) => setImage(e.target.value)}
                       placeholder="Link here"
                       value={image}
@@ -418,7 +528,7 @@ function Home() {
                         </div>
                         <img
                           className="home-top-charts-song-favourite"
-                          onClick={() => setModalOpen(true)}
+                          onClick={() => [setModalOpen(true), setNewId(item.id)]}
                           src={FIcon}
                           alt=""
                         />

@@ -200,6 +200,7 @@ function AdminHome() {
           ? swal("Successfully!", res.data.message, "success")
           : swal("Fail!", "Try again", "error");
         setModalOpen4(false);
+        window.location.reload();
       })
       .catch((res) => {
         swal("Fail!", "Try again", "error");
@@ -429,7 +430,7 @@ function AdminHome() {
                     className="modal-footer-btn"
                     onClick={() => [handleTrack()]}
                   >
-                    Save
+                    Next
                   </Button>
                 ) : (
                   <Button
@@ -438,7 +439,7 @@ function AdminHome() {
                     disabled
                     className="modal-footer-btn-inactive"
                   >
-                    Save
+                    Next
                   </Button>
                 )}
               </div>,
@@ -498,7 +499,7 @@ function AdminHome() {
                 <Button
                   key="back"
                   type="link"
-                  onClick={() => setModalOpen2(false)}
+                  onClick={() => setModalOpen3(true)}
                   style={{ color: "#FFF" }}
                 >
                   Cancel
@@ -645,7 +646,7 @@ function AdminHome() {
                     className="modal-footer-btn"
                     onClick={() => [handleArtist()]}
                   >
-                    Save
+                    Next
                   </Button>
                 </div>
               </div>,

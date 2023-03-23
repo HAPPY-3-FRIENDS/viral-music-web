@@ -49,7 +49,7 @@ function SongCom(props) {
 
   return (
     <div>
-      <div className="playlistDetail-song-list-container">
+      <div style={{width: props.widthCon}} className="playlistDetail-song-list-container">
         <div style={{ display: props.display }}>
           <h1 style={{ marginLeft: "32px", marginRight: "32px" }}>{props.id}</h1>
           <img src={Line} alt="" srcset="" />
@@ -70,6 +70,7 @@ function SongCom(props) {
           className="playlistDetail-song-list-play"
           src={Play}
           onClick={props.handlePlay}
+          style={{right: props.right}}
           alt=""
           srcset=""
         />
@@ -78,6 +79,7 @@ function SongCom(props) {
           src={Line}
           alt=""
           srcset=""
+          style={{display: props.lineDisable}}
         />
         <img
           className="playlistDetail-song-list-favor"
@@ -85,6 +87,7 @@ function SongCom(props) {
           onClick={() => setModalOpen(true)}
           alt=""
           srcset=""
+          style={{display: props.loveDisable}}
         />
       </div>
 
@@ -141,7 +144,6 @@ function SongCom(props) {
           </div>
         </div>
       </Modal>
-
     </div>
   );
 }

@@ -510,7 +510,7 @@ function Home() {
               <div className="home-top-charts-container">
                 <p className="home-top-charts-header">Top charts</p>
                 <a
-                  onClick={() => navigate("/song")}
+                  onClick={() => navigate("/chart")}
                   className="home-top-charts-see-more"
                 >
                   See more...
@@ -535,9 +535,9 @@ function Home() {
                           </p>
                           <p className="home-top-charts-song-singer-name">
                             {item.trackArtists.map((art) => {
-                              return art.length > 1
+                              return item.trackArtists.length > 2
                                 ? art.artist.name
-                                : `${art.artist.name}`;
+                                : `${art.artist.name} `;
                             })}
                           </p>
                           <p className="home-top-charts-song-duration">
@@ -613,7 +613,7 @@ function Home() {
                                 <div className="home-type-text-container">
                                   <p className="home-type-name">{song.title}</p>
                                   {song.artists.map((art) => {
-                                    return art.length > 1 ? art : `${art} `;
+                                    return song.artists.length > 2 ? art : `${art} `;
                                   })}
                                 </div>
                               </div>

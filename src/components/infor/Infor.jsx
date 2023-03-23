@@ -12,7 +12,7 @@ import axios from "axios";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { useNavigate } from "react-router-dom";
 import Play from "../../asset/Play_Music.png";
-
+import swal from "sweetalert";
 
 function Infor() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -22,6 +22,22 @@ function Infor() {
   const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
   const [playlist, setPlaylist] = useState([]);
+  const [tracksSearch, setTracksSearch] = useState([]);
+
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
@@ -84,18 +100,21 @@ function Infor() {
         }
       )
       .then(function (response) {
-        console.log(response.data.data);
+        response.status === 200
+          ? swal("Successfully!", response.data.message, "success")
+          : swal("Fail!", "Try again", "error");
         setFullname(response.data.data.fullname);
       })
       .catch(function (error) {
         console.log(error);
+        swal("Fail!", "Try again", "error");
       });
 
   return (
     <div className="playlist-container">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -108,6 +127,9 @@ function Infor() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate("/SearchResult", { state: { trackList: tracksSearch } })
+            : ""}
           <div className="playlistDetail-content-container">
             <img className="artist-img" src={avatar} alt="" />
             <div className="playlistDetail-text-content">
@@ -122,7 +144,7 @@ function Infor() {
               </p>
             </div>
             <img
-              style={{ marginLeft: "2%", marginTop: "-2%" }}
+              style={{ marginTop: "-2%" }}
               src={Edit}
               alt=""
               srcset=""
@@ -161,7 +183,7 @@ function Infor() {
                   key="submit"
                   type="primary"
                   className="modal-footer-btn"
-                  onClick={() => [handleFullname, setModalOpen(false)]}
+                  onClick={() => [handleFullname(), setModalOpen(false)]}
                 >
                   Update
                 </Button>

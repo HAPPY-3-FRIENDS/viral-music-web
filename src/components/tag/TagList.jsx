@@ -26,8 +26,24 @@ function TagList() {
   const [duration, setDuration] = useState(0);
   const [isPlay, setPlay] = useState(false);
   const [volume, setVolume] = useState(60);
+  const [tracksSearch, setTracksSearch] = useState([]);
 
-  console.log(state.name)
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  console.log(state.name);
 
   const handleLoadedData = () => {
     setDuration(audioRef.current.duration);
@@ -115,7 +131,7 @@ function TagList() {
     <div className="playlistDetail-home">
       <Row>
         <Col span={24}>
-          <Header />
+        <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -128,6 +144,9 @@ function TagList() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate('/SearchResult', {state: {trackList: tracksSearch}})
+            : ''}
           <div className="playlistDetail-container">
             <ArrowLeftOutlined
               className="playlistDetail-arrow-left"
@@ -142,7 +161,14 @@ function TagList() {
             </div>
           </div>
           <div className="playlistDetail-content-container">
-          <video className="playlistDetail-img" src={video} width="750" height="500" autoPlay muted></video>
+            <video
+              className="playlistDetail-img"
+              src={video}
+              width="750"
+              height="500"
+              autoPlay
+              muted
+            ></video>
             <div className="playlistDetail-text-content">
               <h1 className="playlistDetail-text-content-listened">
                 {state.genName !== undefined ? state.genName : state.name}
@@ -150,7 +176,10 @@ function TagList() {
               <p className="playlistDetail-text-content-include">
                 {tracks.length} songs
               </p>
-              <div onClick={() => [setAudioIndex(0), setPlay(true)]} className="playlistDetail-text-button-play-all">
+              <div
+                onClick={() => [setAudioIndex(0), setPlay(true)]}
+                className="playlistDetail-text-button-play-all"
+              >
                 <img
                   className="playlistDetail-button-play-all"
                   src={PlayYel}

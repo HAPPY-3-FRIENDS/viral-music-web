@@ -23,6 +23,23 @@ function Chart() {
   const [isPlay, setPlay] = useState(false);
   const [volume, setVolume] = useState(60);
 
+  const [tracksSearch, setTracksSearch] = useState([]);
+
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   useEffect(() => {
     axios
       .get(`https://localhost:44377/api/tracks`, {
@@ -91,7 +108,7 @@ function Chart() {
     <div className="playlist-container">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -104,6 +121,9 @@ function Chart() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate("/SearchResult", { state: { trackList: tracksSearch } })
+            : ""}
           <div className="playlist-header-text-container">
             <h1 className="playlist-header-text-top">TOP</h1>
             <div className="playlist-header-text">
@@ -111,7 +131,7 @@ function Chart() {
               <p className="playlist-header-text-collection">CHART</p>
             </div>
             <img
-            onClick={() => [setAudioIndex(0), setPlay(true)]}
+              onClick={() => [setAudioIndex(0), setPlay(true)]}
               style={{ marginLeft: "16px" }}
               src={PlayYel}
               alt=""

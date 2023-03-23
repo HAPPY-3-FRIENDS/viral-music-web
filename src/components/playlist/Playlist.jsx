@@ -18,6 +18,22 @@ function Playlist() {
   const [next, setNext] = useState(false);
   const [previous, setPrevious] = useState(true);
   const navigate = useNavigate();
+  const [tracksSearch, setTracksSearch] = useState([]);
+
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   const handlePlaylist = (index) => {
     setShow(!show);
@@ -56,7 +72,7 @@ function Playlist() {
     <div className="playlist-container">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -69,6 +85,9 @@ function Playlist() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate("/SearchResult", { state: { trackList: tracksSearch } })
+            : ""}
           <div className="playlist-header-text-container">
             <h1 className="playlist-header-text-top">TOP</h1>
             <div className="playlist-header-text">
@@ -84,7 +103,15 @@ function Playlist() {
                       <div
                         key={index}
                         className="playlist-pic-relative"
-                        onClick={() => navigate("/playlistDetail", {state: { id: item.id, name: item.name, image: item.image }})}
+                        onClick={() =>
+                          navigate("/playlistDetail", {
+                            state: {
+                              id: item.id,
+                              name: item.name,
+                              image: item.image,
+                            },
+                          })
+                        }
                       >
                         <img
                           onMouseEnter={() => handlePlaylist(index)}
@@ -107,10 +134,9 @@ function Playlist() {
                       </div>
                     );
                   })
-                : "No data"}
+                : <p style={{color: '#FFF'}}>No data</p>}
             </div>
           </ScrollContainer>
-          )
         </Col>
       </Row>
     </div>

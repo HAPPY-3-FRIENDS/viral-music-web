@@ -32,6 +32,22 @@ function Artist() {
   const [duration, setDuration] = useState(0);
   const [isPlay, setPlay] = useState(false);
   const [volume, setVolume] = useState(60);
+  const [tracksSearch, setTracksSearch] = useState([]);
+
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   const handleLoadedData = () => {
     setDuration(audioRef.current.duration);
@@ -118,7 +134,7 @@ function Artist() {
     <div className="playlistDetail-home">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -131,6 +147,9 @@ function Artist() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate("/SearchResult", { state: { trackList: tracksSearch } })
+            : ""}
           {artist !== undefined ? (
             <div>
               <div className="playlistDetail-container">
@@ -153,13 +172,16 @@ function Artist() {
                   <p className="playlistDetail-text-content-include">
                     {artist.profile}
                   </p>
-                  <div onClick={() => setAudioIndex(0)} className="playlistDetail-text-button-play-all">
+                  <div
+                    onClick={() => setAudioIndex(0)}
+                    className="playlistDetail-text-button-play-all"
+                  >
                     <img
                       className="playlistDetail-button-play-all"
                       src={PlayYel}
                       alt=""
                     />
-                    <p className="playlistDetail-text-play-all">Play all</p>
+                    <p onClick={() => setPlay(true)} className="playlistDetail-text-play-all">Play all</p>
                   </div>
                 </div>
               </div>
@@ -169,17 +191,23 @@ function Artist() {
           )}
 
           <h1 style={{ color: "#FFF" }}>PLAYLIST</h1>
-          {tracks.length !== 0
-            ? tracks.map((item, index) => {
-                return (
-                  <div className="playlistDetail-list-container">
+          <div className="playlistDetail-list-container">
+            {tracks.length !== 0
+              ? tracks.map((item, index) => {
+                  return (
                     <div>
-                      <SongCom duration={formatTime(duration)} image={item.track.image} handlePlay={() => setAudioIndex(index)} name={item.track.title} display="none" />
+                      <SongCom
+                        duration={formatTime(duration)}
+                        image={item.track.image}
+                        handlePlay={() => setAudioIndex(index)}
+                        name={item.track.title}
+                        display="none"
+                      />
                     </div>
-                  </div>
-                );
-              })
-            : "No songs"}
+                  );
+                })
+              : "No songs"}
+          </div>
         </Col>
       </Row>
       {tracks.length !== 0

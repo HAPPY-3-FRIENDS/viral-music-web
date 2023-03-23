@@ -30,6 +30,22 @@ function PlaylistDetail() {
   const [duration, setDuration] = useState(0);
   const [isPlay, setPlay] = useState(false);
   const [volume, setVolume] = useState(60);
+  const [tracksSearch, setTracksSearch] = useState([]);
+
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   const handleLoadedData = () => {
     setDuration(audioRef.current.duration);
@@ -104,7 +120,7 @@ function PlaylistDetail() {
     <div className="playlistDetail-home">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -118,6 +134,11 @@ function PlaylistDetail() {
         </Col>
         <Col span={22}>
           <div className="playlistDetail-container">
+            {tracksSearch.length !== 0
+              ? navigate("/SearchResult", {
+                  state: { trackList: tracksSearch },
+                })
+              : ""}
             <ArrowLeftOutlined
               onClick={() => navigate(-1)}
               className="playlistDetail-arrow-left"
@@ -144,7 +165,7 @@ function PlaylistDetail() {
                   alt=""
                 />
                 <p
-                  onClick={() => setAudioIndex(0)}
+                  onClick={() => [setAudioIndex(0), setPlay(true)]}
                   className="playlistDetail-text-play-all"
                 >
                   Play all

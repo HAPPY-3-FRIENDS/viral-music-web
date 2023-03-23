@@ -17,6 +17,7 @@ import SearchResult from "./components/search/SearchResult";
 import jwt_decode from "jwt-decode";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedUserRoute from "./ProtectedUserRoute";
+import ArtistAdmin from "./components/artist/ArtistAdmin";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route exact path="/" element={<ProtectedAdminRoute />}>
           <Route exact path="/adminEdit" element={<AdminEdit />} />
           <Route exact path="/adminHome" element={<AdminHome />} />
+          <Route exact path="/artistAdmin" element={<ArtistAdmin />} />
         </Route>
         <Route exact path="/" element={<ProtectedUserRoute />}>
           <Route exact path="/home" element={<Home />} />

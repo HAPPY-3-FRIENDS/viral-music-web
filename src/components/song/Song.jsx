@@ -15,7 +15,6 @@ import Volumn from "../../asset/Volumn.png";
 import Pause from "../../asset/Pause.png";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 
-
 function Song() {
   const [tracks, setTracks] = useState([]);
   const navigate = useNavigate();
@@ -40,6 +39,7 @@ function Song() {
         console.log(error);
       });
   }, []);
+
 
   const handleLoadedData = () => {
     setDuration(audioRef.current.duration);
@@ -123,12 +123,12 @@ function Song() {
               ? tracks.map((item, index) => {
                   return (
                     <SongCom
-                      id={index+1}
+                      id={index + 1}
                       image={item.image}
                       name={item.title}
                       duration={formatTime(duration)}
                       handlePlay={() => [setAudioIndex(index), setPlay(true)]}
-                      display="flex"
+                      display="none"
                     />
                   );
                 })

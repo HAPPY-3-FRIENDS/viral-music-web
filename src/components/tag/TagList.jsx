@@ -7,6 +7,7 @@ import "../../style/PlaylistDetail.css";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import Music from "../../asset/Playlist_IMG.jpg";
 import PlayBottomSong from "../play_song/PlayBottomSong";
+import video from "../../asset/video.mp4";
 import SongCom from "../song/SongCom";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -141,7 +142,7 @@ function TagList() {
             </div>
           </div>
           <div className="playlistDetail-content-container">
-            <img className="playlistDetail-img" src={Music} alt="" />
+          <video className="playlistDetail-img" src={video} width="750" height="500" autoPlay muted></video>
             <div className="playlistDetail-text-content">
               <h1 className="playlistDetail-text-content-listened">
                 {state.genName !== undefined ? state.genName : state.name}

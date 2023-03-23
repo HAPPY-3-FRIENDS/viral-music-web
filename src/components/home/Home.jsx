@@ -18,6 +18,7 @@ import axios from "axios";
 import Pause from "../../asset/Pause.png";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import swal from "sweetalert";
+import SongCom from "../song/SongCom";
 
 function Home() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function Home() {
   const [artists, setArtists] = useState([]);
   const audioRef = useRef();
   const [audioIndex, setAudioIndex] = useState(0);
+  const [tracksSearch, setTracksSearch] = useState([]);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isPlay, setPlay] = useState(false);
@@ -34,7 +36,7 @@ function Home() {
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [playlistName, setPlaylistName] = useState([]);
-  const [playlistSelected, setPlaylistSelected] = useState('');
+  const [playlistSelected, setPlaylistSelected] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
   const [newId, setNewId] = useState();
@@ -113,7 +115,7 @@ function Home() {
       .catch(function (error) {
         console.log(error);
       });
-  });
+  }, [modal2Open]);
 
   useEffect(() => {
     axios
@@ -185,8 +187,6 @@ function Home() {
     setPlay(!isPlay);
   };
 
-  console.log(genresFilter);
-
   const handleTimeSliderChange = ({ x }) => {
     audioRef.current.currentTime = x;
     setCurrentTime(x);
@@ -226,11 +226,26 @@ function Home() {
     }
   };
 
+  const onSearch = (value) =>
+    axios
+      .get(`https://localhost:44377/api/tracks/name/${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setTracksSearch(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   return (
     <div className="home-container">
       <Row>
         <Col span={24}>
-          <Header />
+          <Header onSearch={onSearch} />
         </Col>
       </Row>
       <Row>
@@ -243,6 +258,9 @@ function Home() {
           />
         </Col>
         <Col span={22}>
+          {tracksSearch.length !== 0
+            ? navigate('/SearchResult', {state: {trackList: tracksSearch}})
+            : ''}
           <Modal
             centered
             wrapClassName="songCom-modal-addTrack-container"
@@ -519,7 +537,7 @@ function Home() {
                             {item.trackArtists.map((art) => {
                               return art.length > 1
                                 ? art.artist.name
-                                : `${art.artist.name} `;
+                                : `${art.artist.name}`;
                             })}
                           </p>
                           <p className="home-top-charts-song-duration">
@@ -528,7 +546,10 @@ function Home() {
                         </div>
                         <img
                           className="home-top-charts-song-favourite"
-                          onClick={() => [setModalOpen(true), setNewId(item.id)]}
+                          onClick={() => [
+                            setModalOpen(true),
+                            setNewId(item.id),
+                          ]}
                           src={FIcon}
                           alt=""
                         />

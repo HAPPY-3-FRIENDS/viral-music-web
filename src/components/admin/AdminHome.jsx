@@ -307,6 +307,21 @@ function AdminHome() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`https://localhost:44377/api/artists`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("tokenLogin")}`,
+        },
+      })
+      .then(function (response) {
+        setArtists(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [modalOpen2, modalOpen6]);
+
   // let newArr = tracks.map((value, index, tracks) => {
   //   return value.trackGenres[0].genre.name;
   // });
@@ -344,7 +359,7 @@ function AdminHome() {
                   <div
                     key={index}
                     onClick={() =>
-                      navigate("/artist", { state: { id: item.id } })
+                      navigate("/artistAdmin", { state: { id: item.id } })
                     }
                     className="home-artist-container"
                     style={{ cursor: "pointer", zIndex: '999' }}

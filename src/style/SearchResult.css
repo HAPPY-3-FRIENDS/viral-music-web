@@ -20,6 +20,7 @@
   height: 200px;
   border-radius: 16px;
   margin-right: 32px;
+  object-fit: cover;
 }
 
 .searchResult-song-result-container {

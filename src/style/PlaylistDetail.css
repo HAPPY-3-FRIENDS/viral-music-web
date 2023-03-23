@@ -290,6 +290,7 @@
 .playlistDetail-text-content-listened {
   font-size: 36px;
   margin: 0;
+  font-weight: 700;
 }
 
 .playlistDetail-text-content-include {
@@ -405,6 +406,12 @@
 .playlistDetail-song-list-line {
   position: absolute;
   right: 8%;
+}
+
+.playlistDetail-text-content-delete {
+  margin-left: 24px;
+  font-size: 32px;
+  color: #f03939;
 }
 
 .playlistDetail-song-list-favor {

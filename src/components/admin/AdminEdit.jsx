@@ -8,6 +8,7 @@ import "../../style/PlaylistDetail.css";
 import PlayYel from "../../asset/Playlist_Play_YeIcon.png";
 import Music from "../../asset/Playlist_IMG.jpg";
 import New from "../../asset/NewSong.png";
+import video from "../../asset/video.mp4";
 import PlayBottomSong from "../play_song/PlayBottomSong";
 import SongCom from "../song/SongCom";
 import SongAdmin from "../song/SongAdmin";
@@ -65,7 +66,7 @@ function AdminEdit() {
 
   useEffect(() => {
     handleGetAllTrack();
-  }, [length])
+  }, [length]);
 
   useEffect(() => {
     if (state !== null) {
@@ -212,7 +213,7 @@ function AdminEdit() {
             </div>
           </div>
           <div className="playlistDetail-content-container">
-            <img className="playlistDetail-img" src={Music} alt="" />
+            <video className="playlistDetail-img" src={video} width="750" height="500" autoPlay muted></video>
             <div className="playlistDetail-text-content">
               <div className="playlistDetail-content-container">
                 <h1 className="playlistDetail-text-content-listened">
@@ -305,26 +306,28 @@ function AdminEdit() {
             className="playlistDetail-list-container"
             style={{ marginBottom: "64px" }}
           >
-            {tracks.length !== 0
-              ? tracks.map((item) => {
-                  return (
-                    <div>
-                      <SongAdmin
-                        id={item.trackId}
-                        imageURL={item.track.image}
-                        duration={formatTime(duration)}
-                        name={item.track.title}
-                        display="none"
-                      />
-                      <audio
-                        ref={audioRef}
-                        src={item.track.source}
-                        onLoadedData={handleLoadedData}
-                      />
-                    </div>
-                  );
-                })
-              : <p style={{color: '#fff'}}>No have song</p>}
+            {tracks.length !== 0 ? (
+              tracks.map((item) => {
+                return (
+                  <div>
+                    <SongAdmin
+                      id={item.trackId}
+                      imageURL={item.track.image}
+                      duration={formatTime(duration)}
+                      name={item.track.title}
+                      display="none"
+                    />
+                    <audio
+                      ref={audioRef}
+                      src={item.track.source}
+                      onLoadedData={handleLoadedData}
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <p style={{ color: "#fff" }}>No have song</p>
+            )}
           </div>
         </Col>
       </Row>

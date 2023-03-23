@@ -14,7 +14,7 @@ import Music from "../../asset/Playlist_IMG.jpg";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import HNSinger from "../../asset/Home_Singer_HN.jpg";
 import ScrollContainer from "react-indiana-drag-scroll";
-
+import { useLocation, useNavigate } from "react-router-dom";
 
 function SearchResult() {
   const audioRef = useRef();
@@ -23,6 +23,12 @@ function SearchResult() {
   const [duration, setDuration] = useState(0);
   const [isPlay, setPlay] = useState(false);
   const [volume, setVolume] = useState(60);
+
+  const { state } = useLocation();
+
+  const navigate = useNavigate();
+
+  console.log(state.trackList);
 
   const handleLoadedData = () => {
     setDuration(audioRef.current.duration);
@@ -73,7 +79,12 @@ function SearchResult() {
       </Row>
       <Row>
         <Col span={2}>
-          <Menu active1='menu-icon' active2='menu-icon' active3='menu-icon' active4='menu-icon'/>
+          <Menu
+            active1="menu-icon"
+            active2="menu-icon"
+            active3="menu-icon"
+            active4="menu-icon"
+          />
         </Col>
         <Col span={22}>
           <div className="searchResult-container">
@@ -83,16 +94,18 @@ function SearchResult() {
                 <div className="searchResult-song-result-container">
                   <img
                     className="searchResult-song-bottom-ava"
-                    src={Music}
+                    src={state.trackList[audioIndex].image}
                     alt=""
                     srcset=""
                   />
                   <div className="searchResult-song-bottom-container">
                     <h3 className="searchResult-song-bottom-name">
-                      {Audio[audioIndex].title}
+                      {state.trackList[audioIndex].title}
                     </h3>
                     <p className="searchResult-song-bottom-artist-name">
-                      {Audio[audioIndex].artist}
+                      {state.trackList[audioIndex].artists.map((item) => {
+                        return item;
+                      })}
                     </p>
                   </div>
                 </div>
@@ -163,7 +176,7 @@ function SearchResult() {
                   </div>
                   <audio
                     ref={audioRef}
-                    src={Audio[audioIndex].src}
+                    src={state.trackList[audioIndex].source}
                     onLoadedData={handleLoadedData}
                     onTimeUpdate={() =>
                       setCurrentTime(audioRef.current.currentTime)
@@ -184,129 +197,39 @@ function SearchResult() {
                 }}
               >
                 <h1>SONGS</h1>
-                <ArrowRightOutlined className="searchResult-songs-btn" />
+                <ArrowRightOutlined onClick={() => navigate('/song')} className="searchResult-songs-btn" />
               </div>
-              <div className="searchResult-songs">
-                <div className="searchResult-songs-content">
-                  <img
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "8px",
-                    }}
-                    src={Music}
-                    alt=""
-                    srcset=""
-                  />
-                  <div className="searchResult-songs-text-container">
-                    <h3 className="searchResult-songs-text-title">Tình đầu</h3>
-                    <p className="searchResult-songs-text-artist">
-                      Tăng Duy Tân
-                    </p>
+              {state.trackList.map((item, index) => {
+                return (
+                  <div className="searchResult-songs">
+                    <div className="searchResult-songs-content">
+                      <img
+                        style={{
+                          width: "80px",
+                          height: "80px",
+                          borderRadius: "8px",
+                          objectFit: 'cover'
+                        }}
+                        onClick={() => setAudioIndex(index)}
+                        src={item.image}
+                        alt=""
+                        srcset=""
+                      />
+                      <div className="searchResult-songs-text-container">
+                        <h3 className="searchResult-songs-text-title">
+                          {item.title}
+                        </h3>
+                        <p className="searchResult-songs-text-artist">
+                          {item.artists.map((item) => {
+                            return item;
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <p>02 : 20</p>
                   </div>
-                </div>
-                <p>02 : 20</p>
-              </div>
-              <div className="searchResult-songs">
-                <div className="searchResult-songs-content">
-                  <img
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "8px",
-                    }}
-                    src={Music}
-                    alt=""
-                    srcset=""
-                  />
-                  <div className="searchResult-songs-text-container">
-                    <h3 className="searchResult-songs-text-title">Tình đầu</h3>
-                    <p className="searchResult-songs-text-artist">
-                      Tăng Duy Tân
-                    </p>
-                  </div>
-                </div>
-                <p>02 : 20</p>
-              </div>
-              <div className="searchResult-songs">
-                <div className="searchResult-songs-content">
-                  <img
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "8px",
-                    }}
-                    src={Music}
-                    alt=""
-                    srcset=""
-                  />
-                  <div className="searchResult-songs-text-container">
-                    <h3 className="searchResult-songs-text-title">Tình đầu</h3>
-                    <p className="searchResult-songs-text-artist">
-                      Tăng Duy Tân
-                    </p>
-                  </div>
-                </div>
-                <p>02 : 20</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="playlistDetail-content-container">
-              <h1 style={{marginTop: "48px"}} className="home-top-artist-header">RECENTLY SEARCHED SONGS</h1>
-            </div>
-            <div>
-              <ScrollContainer style={{marginTop: "0", width: "1560px"}} className="home-scroll-container">
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-                <div className="home-type-container">
-                  <img className="home-type-img" src={HNSinger} alt="" />
-                  <div className="home-type-text-container">
-                    <p className="home-type-name">Chưa quên người yêu cũ</p>
-                    <p className="home-type-singer">Hà Nhi</p>
-                  </div>
-                </div>
-              </ScrollContainer>
+                );
+              })}
             </div>
           </div>
         </Col>
